@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1">
+  <title>Gestionnaire de série</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.0/css/bulma.min.css">
+  <style>
+    body {
+      padding: 50px;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    .container form {
+      max-width: 60%;
+      margin: 40px auto;
+    }
+
+    .container .list {
+      padding: 20px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .container .columns {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .container .columns:last-child {
+      border-bottom: 0;
+    }
+
+    .current-eps {
+      padding: 0 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="title is-1 has-text-centered">Gestionnaire de série en tout genre</h1>
+
+    <form action="">
+      <div class="field">
+        <label class="label">Type</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Titre</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Episodes total</label>
+        <p class="control">
+          <input class="input" type="number">
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Episodes vus</label>
+        <p class="control">
+          <input class="input" type="number">
+        </p>
+      </div>
+
+      <div class="field">
+        <p class="control">
+          <button class="button is-success">Ajouter</button>
+        </p>
+      </div>
+    </form>
+
+    <h2 class="title is-2">List des séries ajoutées</h2>
+
+    <div class="list">
+      <div class="field has-addons">
+        <p class="control">
+          <a class="button">
+            <span>Manga</span>
+          </a>
+        </p>
+        <p class="control">
+          <a class="button">
+            <span>Livre</span>
+          </a>
+        </p>
+        <p class="control">
+          <a class="button">
+            <span>Séries</span>
+          </a>
+        </p>
+      </div>
+
+
+    <div class="columns">
+        <div class="column"><strong>Type</strong></div>
+        <div class="column"><strong>Titre</strong></div>
+        <div class="column"><strong>Episodes en cours</strong></div>
+        <div class="column"><strong>Episodes </strong></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  var inputs = document.querySelectorAll('.input');
+  var btn = document.querySelector('button');
+  var list = JSON.parse(localStorage.getItem('liste')) || [];
+
+  btn.addEventListener('click', function() {
+      var obj = {
+          type: inputs[0].value,
+          titre: inputs[1].value,
+          episode_max: inputs[2].value,
+          episode_vu: inputs[3].value
+      };
+      list.push(obj);
+      localStorage.setItem('liste', JSON.stringify(list));
+  });
+
+   for (var i = 0; i < list.length; i++) {
+   		var divColumns = document.createElement("div");
+		divColumns.classList = "columns";
+
+        createDiv(i, divColumns);
+        createTab(i);
+
+    	document.querySelector(".list").appendChild(divColumns);
+    }
+
+   function createDiv(numObj, col) {
+
+        for (var j = 0; j < 4; j++) {
+            var divColumn = document.createElement("div");
+            divColumn.classList = "column";
+
+            switch (j) {
+                case 0:
+                    var text = document.createTextNode(list[numObj].type);
+                    divColumn.appendChild(text);
+                    break;
+                case 1:
+                    var text = document.createTextNode(list[numObj].titre);
+                    divColumn.appendChild(text);
+                    break;
+                case 2:
+                    spanPlusMoins(numObj, divColumn);
+                    break;
+                case 3:
+                    var text = document.createTextNode(list[numObj].episode_max);
+                    divColumn.appendChild(text);
+                    break;
+            }
+            col.appendChild(divColumn);
+        }
+   }
+
+   function createTab(numObj) {
+       var count = 0;
+
+       for (var i = 0; i < list.length; i++) {
+           if (list[numObj].type == list[i].type) {
+               
+               console.log(list[numObj].type);
+               console.log(list[i].type);
+           }
+//           console.log(list[numObj]);
+       }
+//       console.log(list[numObj].type);
+   }
+
+   function spanPlusMoins(serie, _4col) {
+       var text = document.createTextNode(list[serie].episode_vu);
+       var span = document.createElement("span");
+       span.classList = "current-eps";
+       span.appendChild(text);
+       _4col.appendChild(span);
+       for (var k = 1; k < 3; k++) {
+           var createA = document.createElement("a");
+           if (k == 1) {
+               createA.classList = "plus button";
+               var textPlus = document.createTextNode(" + ");
+               createA.appendChild(textPlus);
+               _4col.appendChild(createA);
+               createA.addEventListener('click', function() {
+                   if (parseInt(list[serie].episode_vu) < parseInt(list[serie].episode_max)) {
+                       list[serie].episode_vu = parseInt(list[serie].episode_vu) + 1;
+                       list[serie].episode_vu = list[serie].episode_vu.toString();
+                       localStorage.setItem('liste', JSON.stringify(list));
+                       span.innerHTML = list[serie].episode_vu;
+                   }
+               });
+           } else {
+               createA.classList = "minus button";
+               var textMoins = document.createTextNode(" - ");
+               createA.appendChild(textMoins);
+               _4col.appendChild(createA);
+               createA.addEventListener('click', function() {
+                   if (parseInt(list[serie].episode_vu ) > 0) {
+                       list[serie].episode_vu = parseInt(list[serie].episode_vu) - 1;
+                       list[serie].episode_vu = list[serie].episode_vu.toString();
+                       localStorage.removeItem('liste');
+                       localStorage.setItem('liste', JSON.stringify(list));
+                       span.innerHTML = list[serie].episode_vu;
+                   }
+               });
+           }
+       }
+   }
+</script>
+</body>
+</html>
