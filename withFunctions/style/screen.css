@@ -1,0 +1,31 @@
+body {
+    padding: 50px;
+}
+
+.title {
+    text-align: center;
+}
+
+.container form {
+    max-width: 60%;
+    margin: 40px auto;
+}
+
+.container .list {
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.container .columns {
+    border-bottom: 1px solid #ccc;
+}
+
+.container .columns:last-child {
+    border-bottom: 0;
+}
+
+.current-eps {
+    padding: 0 10px;
+}

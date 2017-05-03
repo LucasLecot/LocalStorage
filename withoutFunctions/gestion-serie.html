@@ -5,39 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1">
     <title>Gestionnaire de série</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.0/css/bulma.min.css">
-    <style>
-        body {
-            padding: 50px;
-        }
-
-        .title {
-            text-align: center;
-        }
-
-        .container form {
-            max-width: 60%;
-            margin: 40px auto;
-        }
-
-        .container .list {
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        .container .columns {
-            border-bottom: 1px solid #ccc;
-        }
-
-        .container .columns:last-child {
-            border-bottom: 0;
-        }
-
-        .current-eps {
-            padding: 0 10px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style/screen.css">
 </head>
 <body>
 
@@ -111,88 +79,6 @@
     </div>
 </div>
 
-<script>
-    var inputs = document.querySelectorAll('.input');
-    var btn = document.querySelector('button');
-    var list = JSON.parse(localStorage.getItem('liste')) || [];
-
-    btn.addEventListener('click', function() {
-        var obj = {
-            type: inputs[0].value,
-            titre: inputs[1].value,
-            episode_max: inputs[2].value,
-            episode_vu: inputs[3].value
-        };
-        list.push(obj);
-        localStorage.setItem('liste', JSON.stringify(list));
-    });
-
-    for (let i = 0; i < list.length; i++) {
-        var divColumns = document.createElement("div");
-        divColumns.classList = "columns";
-
-        for (var j = 0; j < 4; j++) {
-            var divColumn = document.createElement("div");
-            divColumn.classList = "column";
-
-            switch (j) {
-                case 0:
-                    var text = document.createTextNode(list[i].type);
-                    divColumn.appendChild(text);
-                    break;
-                case 1:
-                    var text = document.createTextNode(list[i].titre);
-                    divColumn.appendChild(text);
-                    break;
-                case 2:
-                    var text = document.createTextNode(list[i].episode_vu);
-                    var span = document.createElement("span");
-
-                    span.classList = "current-eps";
-                    span.appendChild(text);
-                    divColumn.appendChild(span);
-                    for (var k = 1; k < 3; k++) {
-                        var createA = document.createElement("a");
-                        if (k == 1) {
-                            createA.classList = "plus button";
-                            var textPlus = document.createTextNode(" + ");
-                            createA.appendChild(textPlus);
-                            divColumn.appendChild(createA);
-                            createA.addEventListener('click', function() {
-                                if (parseInt(list[i].episode_vu) < parseInt(list[i].episode_max)) {
-                                    list[i].episode_vu = parseInt(list[i].episode_vu) + 1;
-                                    list[i].episode_vu = list[i].episode_vu.toString();
-                                    localStorage.setItem('liste', JSON.stringify(list));
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            createA.classList = "minus button";
-                            var textMoins = document.createTextNode(" - ");
-                            createA.appendChild(textMoins);
-                            divColumn.appendChild(createA);
-                            createA.addEventListener('click', function() {
-                                if (parseInt(list[i].episode_vu ) > 0) {
-                                    list[i].episode_vu = parseInt(list[i].episode_vu) - 1;
-                                    list[i].episode_vu = list[i].episode_vu.toString();
-                                    localStorage.removeItem('liste');
-                                    localStorage.setItem('liste', JSON.stringify(list));
-                                    location.reload();
-                                }
-                            });
-                        }
-                    }
-                    break;
-                case 3:
-                    var text = document.createTextNode(list[i].episode_max);
-                    divColumn.appendChild(text);
-                    break;
-            }
-            divColumns.appendChild(divColumn);
-        }
-        document.querySelector(".list").appendChild(divColumns);
-    }
-
-</script>
+<script type="javascript" src="js/appli.js"></script>
 </body>
 </html>
